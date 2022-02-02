@@ -1,0 +1,2 @@
+0_PythonPackages/Python2/Python2.7.18/=1_mergeDocker/classicMerge/$3_VMInDocker/singularity/#
+0_RPackages/R-2/R-2.12.2/=2_GUI/r_studio/
