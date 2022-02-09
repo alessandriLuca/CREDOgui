@@ -5,4 +5,4 @@ docker build . -t  repbioinfo/dockerfilegeneratorv10
 mkdir %Build%
 copy configurationFile.txt %Build%
 del %Build%\id.txt
-docker run -itv %Build%:/home/visualStudio/ -v /var/run/docker.sock:/var/run/docker.sock --privileged=true --cidfile  %Build%\id.txt -p 3000:3000   -e DISABLE_AUTH=true repbioinfo/dockerfilegeneratorv10
+docker run -itv %Build%:/sharedFolder/ -v /var/run/docker.sock:/var/run/docker.sock --privileged=true --cidfile  %Build%\id.txt -p 3000:3000   -e DISABLE_AUTH=true repbioinfo/dockerfilegeneratorv10
