@@ -15,11 +15,13 @@ function checkboxcheck()
         if(id[0]>0)
         {
             this.disabled=true;  
+            $(this).parents('.options').first().css( "pointer-events", "none" );
             $(this).parents('.options').first().css( "background", "#704242" );
         }
         else
         {
             this.disabled=false;
+            $(this).parents('.options').first().css( "pointer-events", "" );
             $(this).parents('.options').first().css( "background", "" );
         }
     });
@@ -34,7 +36,7 @@ function checkboxcheck()
             if (this.id in exceptionstruct)
             {   
                 except=exceptionstruct[this.id].split("$");
-                except.forEach(elem=> { if (document.getElementById(elem)){todisablelist.push(elem)} else{alert("Exceptions doesn't exist");}});
+                except.forEach(elem=> { if (document.getElementById(elem)){todisablelist.push(elem)} else{console.log("Exceptions doesn't exist");}});
             }  
             // LOAD exceptions to guarantee the integrity of 
             id=this.id; 
@@ -67,25 +69,59 @@ function checkboxcheck()
         if (key==0)
         {
             if (levelnumber[key]>1)
-                $(":checkbox").each(function(){if(this.id[0]==1){this.disabled=false;  $(this).parents('.options').first().css( "background", "" ); }});
-            
+                $(":checkbox").each(function(){if(this.id[0]==1){this.disabled=false;              $(this).parents('.options').first().css( "pointer-events", "" ); $(this).parents('.options').first().css( "background", "" ); }});
+
         }
         else
         {
           if( levelnumber[key]==1)
           {
              convkey= parseInt(key)+1;
-             $(":checkbox").each(function(){if(this.id[0]==(convkey)){this.disabled=false;  $(this).parents('.options').first().css( "background", "" ); }});    
+             $(":checkbox").each(function(){if(this.id[0]==(convkey)){this.disabled=false;$(this).parents('.options').first().css( "pointer-events", "" );
+  $(this).parents('.options').first().css( "background", "" ); }});    
           }
+
         }
     }
+   
+    
+     let flag=false;
+    for (let i=0;i<4;i++)
+    {
+        if (i==0)
+        {
+            if (i in levelnumber)
+            {
+                if (levelnumber[i]<2)
+                {
+                  $(":checkbox").each(function(){if(this.id[0]==String(i+1)){this.checked=false; this.disabled=true; $(this).parents('.options').first().css( "pointer-events", "none" );        $(this).parents('.options').first().css( "background", "#704242" );   }});      
+                    flag=true;
+                }
+            }
+        }
+            
+        else{
+            if (!(i in levelnumber)) 
+                {
+                  $(":checkbox").each(function(){if(this.id[0]==String(i+1)){this.checked=false; this.disabled=true; $(this).parents('.options').first().css( "pointer-events", "none" );        $(this).parents('.options').first().css( "background", "#704242" );   }});                          flag=true;
+                }
+        }
+         if (flag==true)
+         {
+                  
+                  $(":checkbox").each(function(){if(this.id[0]==String(i+1)){this.checked=false; this.disabled=true; $(this).parents('.options').first().css( "pointer-events", "none" );        $(this).parents('.options').first().css( "background", "#704242" );   }});      
+
+         }
+    }
+    
     
     //APPLY RESTRICTIONS AND EXCEPTIONS
     
     for (let element in todisablelist)
     {
             let a="#"+todisablelist[element];
-        $(a).each(function(){this.disabled=true;   $(this).parents('.options').first().css( "background", "#704242" );});
+        $(a).each(function(){this.disabled=true;this.checked = false;  $(this).parents('.options').first().css( "background", "#704242" ); $(this).parents('.options').first().css( "pointer-events", "none" );
+});
     }
     
 }

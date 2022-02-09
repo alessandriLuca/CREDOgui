@@ -3,7 +3,7 @@ $(document).ready(function(){
     
 function random()
     {
-    let name=['canidae', 'felidae', 'cat', 'cattle', 'dog', 'donkey', 'goat', 'guinea_pig', 'horse', 'pig', 'rabbit', 'fancy_rat_varieties', 'laboratory_rat_strains', 'sheep_breeds', 'water_buffalo_breeds', 'chicken_breeds', 'duck_breeds', 'goose_breeds', 'pigeon_breeds', 'turkey_breeds', 'aardvark', 'aardwolf', 'african_buffalo', 'african_elephant', 'african_leopard', 'albatross', 'alligator', 'alpaca', 'american_buffalo', 'american_robin', 'amphibian', 'list', 'anaconda', 'angelfish', 'anglerfish',
+  let name=['canidae', 'felidae', 'cat', 'cattle', 'dog', 'donkey', 'goat', 'guinea_pig', 'horse', 'pig', 'rabbit', 'fancy_rat_varieties', 'laboratory_rat_strains', 'sheep_breeds', 'water_buffalo_breeds', 'chicken_breeds', 'duck_breeds', 'goose_breeds', 'pigeon_breeds', 'turkey_breeds', 'aardvark', 'aardwolf', 'african_buffalo', 'african_elephant', 'african_leopard', 'albatross', 'alligator', 'alpaca', 'american_buffalo', 'american_robin', 'amphibian', 'list', 'anaconda', 'angelfish', 'anglerfish',
 'ant', 'anteater', 'antelope', 'antlion', 'ape', 'aphid', 'arabian_leopard', 'arctic_fox', 'arctic_wolf', 'armadillo', 'arrow_crab', 'asp', 'ass_donkey', 'baboon', 'badger', 'bald_eagle', 'bandicoot', 'barnacle', 'barracuda', 'basilisk', 'bass', 'bat', 'beaked_whale', 'bear', 'beaver', 'bedbug', 'bee', 'beetle', 'bird', 'list', 'bison', 'blackbird', 'black_panther', 'black_widow_spider', 'blue_bird', 'blue_jay', 'blue_whale', 'boa', 'boar', 'bobcat', 'bobolink', 'bonobo', 'booby', 'box_jellyfish',
 'bovid', 'buffalo,_african', 'buffalo,_american', 'bug', 'butterfly', 'buzzard', 'camel', 'canid', 'cape_buffalo', 'capybara', 'cardinal', 'caribou', 'carp', 'cat', 'list', 'catshark', 'caterpillar', 'catfish', 'cattle', 'list', 'centipede', 'cephalopod', 'chameleon', 'cheetah', 'chickadee', 'chicken', 'list', 'chimpanzee', 'chinchilla', 'chipmunk', 'clam', 'clownfish', 'cobra', 'cockroach', 'cod', 'condor', 'constrictor', 'coral', 'cougar', 'cow', 'coyote', 'crab', 'crane', 'crane_fly',
 'crawdad', 'crayfish', 'cricket', 'crocodile', 'crow', 'cuckoo', 'cicada', 'damselfly', 'deer', 'dingo', 'dinosaur', 'list', 'dog', 'list', 'dolphin', 'donkey', 'list', 'dormouse', 'dove', 'dragonfly', 'dragon', 'duck', 'list', 'dung_beetle', 'eagle', 'earthworm', 'earwig', 'echidna', 'eel', 'egret', 'elephant', 'elephant_seal', 'elk', 'emu', 'english_pointer', 'ermine', 'falcon', 'ferret', 'finch', 'firefly', 'fish', 'flamingo', 'flea', 'fly', 'flyingfish', 'fowl', 'fox', 'frog', 'fruit_bat', 'gamefowl',
@@ -390,11 +390,12 @@ function random()
 'angalena', 'anetta', 'aneta', 'anedra', 'andru', 'andris', 'andrewjames', 'andren', 'andray', 'andice', 'ander', 'anda', 'ancil', 'anber', 'anaya', 'anastazia', 'anastassia', 'anan', 'analuisa', 'analaura', 'anahita', 'amjad', 'aminda', 'amika', 'ameshia', 'amera', 'ameisha', 'ambriel', 'ambr', 'ambreia', 'ambor', 'amatullah', 'amandah', 'amalie', 'alyss', 'alycen', 'alxis', 'alvita', 'alven', 'alsion', 'alsha', 'almon', 'almetra', 'almee', 'almando', 'allex', 'allesandra', 'allanna', 'allah', 'alka',
 'alixandria', 'alister', 'alissia', 'alisah', 'alin', 'aliki', 'alie', 'aliecia', 'alfredia', 'alfonza', 'alfonse', 'alez', 'aleyda', 'alexius', 'aletheia', 'alesander', 'aleisa', 'alegra', 'aldrick', 'alder', 'akhil', 'akeim', 'akeila', 'akbar', 'ajeenah', 'ajani', 'aiysha', 'aine', 'aina', 'aiman', 'ailyn', 'aidee', 'aicia', 'ahslee', 'ahsha', 'agata', 'afshin', 'afnan', 'afaf', 'aerica', 'adwoa', 'adraine', 'adon', 'adonia', 'adnrea', 'adley', 'adine', 'adian', 'adem', 'adelbert', 'adeel', 'adama',
 'adal', 'adaliz', 'adaira', 'achilles', 'abubakar', 'absalon', 'abie', 'abdullatif', 'abdulla', 'abbye', 'abbagail', 'abayomi', 'aarthi', 'aarik', 'aamil', 'aamanda'];
+
         
         const random1 = Math.floor(Math.random() * name.length);
         const random2 = Math.floor(Math.random() * adj.length);
 
-        return adj[random2]+"_"+name[random1]
+        return name[random1]+adj[random2]
     } 
     
 // !!!!!!!!!!!!!!!!!!!!!!!! CONFIGURATION !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -417,6 +418,21 @@ $("#textcontainer").remove();
       });
 });    
 
+    //!!!!!!!!!!!!!!!! CONVERSION OF CHECKBOX !!!!!!!!!!!!!!!!!!!
+    
+     $(document).on ("click", ".options", function () {
+         
+         if($(this).children('input').prop('checked'))
+         {
+             $(this).children('input').prop("checked", false);
+             checkboxcheck();
+         }
+             else
+             {
+                 $(this).children('input').prop("checked", true);
+                 checkboxcheck();
+             }
+});   
 
     /// !!!!!!!!!!!!!!!!!!!!!!!! WEB LAYOUT CREATION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
@@ -482,6 +498,7 @@ paths.forEach(path=>
         if(id[0]>0)
         {
            this.disabled=true;  
+            $(this).parents('.options').first().css( "pointer-events", "none" );
             $(this).parents('.options').first().css( "background", "#704242" );
         
         }

@@ -1,7 +1,89 @@
-var spawn = require('child_process');
+const { spawn } = require('child_process')
+var finish = false;
+var working= true;
 var out="";
-function runexec(command,parameters,ecwd)
+var booleanlog=false;
+var logpath;
+
+function writeonlogtxt(text)
 {
+    if(booleanlog==false)
+    {
+        let date_ob = new Date();
+        let date = ("0" + date_ob.getDate()).slice(-2);
+        let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+        let year = date_ob.getFullYear();
+        let hours = date_ob.getHours();
+        let minutes = date_ob.getMinutes();
+        logpath=(year + "-" + month + "-" + date + " " + hours + " " + minutes+".txt");
+        booleanlog=true;
+    
+    }
+    fs.writeFile("/sharedFolder/log-"+logpath, text,{flag:"a"}, function(err) {
+    if(err) {
+      return console.error(err);
+    }
+});
+
+}
+function runexec(command,parameters,ecwd)
+{    
+   let child = spawn(command, parameters,{cwd:ecwd});
+    runregex=/\[[0-9]{1}.*\/.*[0-9]\]/;
+    ubunturegex=/Step/;
+    child.stdout.on('data', (data) => {
+        
+        data=data.toString();
+        writeonlogtxt(data);
+        filter=data.split("\n");
+        filter.forEach(elem=>{
+            //console.log(elem);
+           if (elem.includes("Docker container failed"))
+           {
+               working=false;
+               booleanlog=false;
+           }
+            if(elem.match(runregex) || elem.match(ubunturegex))
+               {
+                   out+="<br>"+elem
+
+               }
+            }
+        );
+        });
+
+child.stderr.on('data', (data) => {
+            data=data.toString();
+
+     writeonlogtxt(data);
+            filter=data.split("\n");
+        filter.forEach(elem=>{
+            //console.log(elem);
+              if (elem.includes("Docker container failed"))
+              {
+                  working=false;
+                 booleanlog=false;
+              }
+
+            if(elem.match(runregex) || elem.match(ubunturegex))
+               {out+="<br>"+elem
+                  
+               }
+            }
+        );
+});
+
+child.on('close', (code) => {
+            finish=true;
+
+console.log('child process exited with code '+code);
+});
+
+}
+
+function gitpull(command,parameters,ecwd)
+{
+    let spawn = require('child_process');
    let child = spawn.spawnSync(command, parameters,{cwd:ecwd});
     if(child["error"]!=null)
     {
@@ -35,6 +117,8 @@ function runexec(command,parameters,ecwd)
 
 function spawnutility(command,parameters)
 {
+     let spawn = require('child_process');
+
     let child = spawn.spawnSync(command, parameters);
     stdout=child["stdout"].toString();
     stderr=child["stderr"].toString();
@@ -51,6 +135,7 @@ function spawnutility(command,parameters)
     out+="Process exit with code "+child["status"].toString();
     console.log("Process exit with code "+child["status"].toString());
 }
+/* FOR NOW THIS FUNCTIONS ARE NOT USED
 
 function mergedelete(path,foldername)
 {   
@@ -83,6 +168,12 @@ function remove(path)
     spawnutility("rm",["-rf",path]);
 }
 
+*/
+
+process.on('SIGINT', function() {
+    console.log("Caught interrupt signal");
+        process.exit();
+});
 
 function folderstructure(path,deep)
 {
@@ -116,6 +207,7 @@ function folderstructure(path,deep)
     }
 }
 
+
 function loadexceptions()
 {
     let file = fs.readFileSync('/nodejs/exceptions.txt');
@@ -147,6 +239,36 @@ function sendmessage(output)
     entry="<span class='entry'><span class='time'>"+hours+":"+minutes+":"+seconds+"</span>: "+output+"</span>";
 }
 
+function existfolders()
+{
+     let folders="";
+     let localpath="/sharedFolder"
+    const localfiles = fs.readdirSync(localpath);
+
+     localfiles.forEach
+        (
+            file => 
+            {
+                let completepath=localpath+"/"+file;
+                let state=fs.statSync(completepath);
+                if (state.isDirectory()) 
+                {
+                    folders+=file+"|";
+                }
+            }
+        );   
+    return folders;
+}
+
+function asyncrunexec(url,res)
+{
+        values=url.split("+");
+        command=values[1];
+        parameters=values[2].split("SEP");
+        cwd=values[3];
+        runexec(command,parameters,cwd) ;        
+}
+
 const fs = require('fs');
 
 var qs = require('querystring');
@@ -167,80 +289,44 @@ var temporarypath="/sharedFolder/temp";
 var configpath="/sharedFolder/configurationFile.txt";
 folderstructure("",0);
 var consolelog=[];
-html=head+"<script> var structure='"+structure+"'</script>"+exceptions+script+initialize+dockerscript+header+footer;
+fnames=existfolders();
+html=head+"<script> var structure='"+structure+"'; var fnames='"+fnames+"'</script>"+exceptions+script+initialize+dockerscript+header+footer;
 var options = '';
 
 
 var http = require('http');
 var server=http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-    console.log(req.url);
     if (req.url == '/') 
     {            
         res.write(html);
         res.end();  
     }
-    else if (req.url.split("+")[0]=="/deletemerge")
+    else if (req.url=="/percentage")
     {
-        values=req.url.split("+");
-        path=values[1];
-        foldername=values[2];
-        mergedelete(path,foldername);
-        res.write(out);
-        res.end();
-        out="";
+        if (finish==false || finish==true && out!="")
+        {
+            res.end(out);
+            out="";
+        }
+        else
+        {
+            if (working==true)
+                res.end("well");
+            else
+                res.end("bad");
+            
+            finish=false;
+        }
     }
-    else if (req.url.split("+")[0]=="/deleteone")
+   else if (req.url.split("+")[0]=="/runexec")
     {
-        values=req.url.split("+");
-        foldername=values[1];
-        remove(foldername);
-        res.end(out);
-        out="";
-    }
-    else if (req.url.split("+")[0]=="/createfolder")
-    {
-        values=req.url.split("+");
-        path=values[1];
-        createfolder(path);
-        res.write(out);
-        res.end();
-        out="";
-    }
-    else if (req.url.split("+")[0]=="/runexec")
-    {
-        values=req.url.split("+");
-        command=values[1];
-        parameters=values[2].split("SEP");
-        cwd=values[3];
-        runexec(command,parameters,cwd)        
-        res.write(out);
-        res.end();
-        out="";
-    }
-      else if (req.url.split("+")[0]=="/moveto")
-    {
-        values=req.url.split("+");
-        initial=values[1];
-        end=values[2];
-        moveto(initial,end);
-        res.write(out);
-        res.end();
-        out="";
-    }
-      else if (req.url.split("+")[0]=="/copyto")
-    {
-        values=req.url.split("+");
-        initial=values[1];
-        end=values[2];
-        copyto(initial,end);
-        res.write(out);
-        res.end();
-        out="";
+        setTimeout(asyncrunexec.bind(null, req.url,res), 0);
+        res.end("END");
     }
     else if(req.url== "/update")
     {
-        runexec("git",["pull"],"/home/dockerFileGenerator/");        
+        gitpull("git",["pull"],"/home/dockerFileGenerator/");        
         folderstructure("",0);
         console.log(out);
         if (out.startsWith("Updating"))
@@ -265,7 +351,7 @@ var server=http.createServer(function (req, res) {
         res.write("<span id='textcontainer'><textarea id='textcontent'>"+configurationstring+"</textarea><button id='send' value='"+completepath+"'>Save</button><button id='close'>Close</button></span>");
         res.end();
     }
-    else if(req.url=="/configsend")
+        else if(req.url=="/configsend")
     {
         value='';
         if (req.method == 'POST') 
@@ -286,6 +372,57 @@ var server=http.createServer(function (req, res) {
             res.end();
         }   
     }
+    /* FOR NOW THIS FUNCTIONS ARE NOT USED
+    else if (req.url.split("+")[0]=="/deleteone")
+    {
+        values=req.url.split("+");
+        foldername=values[1];
+        remove(foldername);
+        res.end(out);
+        out="";
+    }
+    else if (req.url.split("+")[0]=="/deletemerge")
+    {
+        values=req.url.split("+");
+        path=values[1];
+        foldername=values[2];
+        mergedelete(path,foldername);
+        res.write(out);
+        res.end();
+        out="";
+    }
+    else if (req.url.split("+")[0]=="/createfolder")
+    {
+        values=req.url.split("+");
+        path=values[1];
+        createfolder(path);
+        res.write(out);
+        res.end();
+        out="";
+    }
+ 
+      else if (req.url.split("+")[0]=="/moveto")
+    {
+        values=req.url.split("+");
+        initial=values[1];
+        end=values[2];
+        moveto(initial,end);
+        res.write(out);
+        res.end();
+        out="";
+    }
+      else if (req.url.split("+")[0]=="/copyto")
+    {
+        values=req.url.split("+");
+        initial=values[1];
+        end=values[2];
+        copyto(initial,end);
+        res.write(out);
+        res.end();
+        out="";
+    }
+    */
+
     req.method="";
 });
 

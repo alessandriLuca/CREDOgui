@@ -1,26 +1,50 @@
 <script>
-    
+    var interval
 $(document).ready(function()
 {
     var queue=[];
+    var working="well";
   
     function runexec(command,parameters,ecwd)
     {
-       sendmessage("Running "+command+" with parameters "+parameters);
+       sendmessage("<span class='command'>Running "+command+" with parameters "+parameters+"</span>");
         $.ajax({
          async: true,
          type: 'GET',
          timeout: 0,
          url: '/runexec+'+command+"+"+parameters.join("SEP")+"+"+ecwd,
          success: function(data) {
-              sendmessage("Running ended with output: \n"+data);
-             startroutine();
+              //sendmessage("Running ended with output: \n"+data);
          },
             error:function(xhr){
 console.log("An error occured: " + xhr.status + " " + xhr.statusText);}
     });
     }
-
+    
+        function percentage()
+    {
+        $.ajax({
+         async: true,
+         type: 'GET',
+         url: '/percentage',
+         success: function(data) {
+             if (data=="well" || data=="bad")
+             {
+                 working=data;
+                 startroutine();
+             }
+             else
+             {
+                 if (data!="")
+                    sendmessage(data);
+             }
+         },
+            error:function(xhr){
+console.log("An error occured: " + xhr.status + " " + xhr.statusText);}
+    });
+    }
+    
+/*  FOR NOW THIS FUNCTIONS ARE NOT USED
     function moveto(initial,end)
     {
         sendmessage("Start move from "+initial+" to "+end);
@@ -97,8 +121,8 @@ function deleteonefolder(foldername)
     }
 
     
-    
-    
+*/
+   
 
 window.sendmessage=function(output)
     {
@@ -133,7 +157,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     {
                         parameters=element.split("|");
                         path=parameters[0];
-                        foldername=parameters[1];
+                        foldername=parameters[1];                            
                         pathformerge.push(sharedpath+foldername);
                         dockername=parameters[2];
    queue.push("runexec|"+dir+path+"/runMe.sh"+"|"+dockername+"£"+foldername+"£"+sharedpath+"£"+configpath+"|"+dir+"/"+path+"/");
@@ -168,14 +192,17 @@ objDiv.scrollTop = objDiv.scrollHeight;
             $('#dckstart').prop('disabled', true);
             sendmessage("Docker creation is starting");
            startroutine();
+            interval=setInterval(percentage, 5000);
+
         }
         else
             sendmessage("No installing options was selected");
     }
     
+    
 function startroutine()
 {
-    if(queue.length!=0)
+    if(queue.length!=0 && working=="well")
     {
         let toexec= queue.shift();
         actions=toexec.split("|");
@@ -184,7 +211,9 @@ function startroutine()
         {
             let obj=actions[2].split("£");
             runexec(actions[1],obj,actions[3]);
-        } else if(actions[0]=="move")
+        } 
+        /* FOR NOW THIS ACTION ARENOT USED 
+        else if(actions[0]=="move")
         {
             moveto(actions[1],actions[2]);
         }
@@ -203,13 +232,25 @@ function startroutine()
         {
             deleteonefolder(actions[1]);
         }
+        */
     }
     else
     {
         var audio = new Audio('https://www.mboxdrive.com/Auditorium%20Applause-SoundBible.com-280911206.mp3');
-        audio.play();
-        sendmessage("Docker creation is finished");
-        // $('#dckstart').prop('disabled', false);
+                    clearInterval(interval);
+
+        console.log(working);
+        if (working=="well")
+        {
+            sendmessage("<span class='finish'>Docker creation is finished!</span>");
+                    audio.play();
+
+
+        }
+            else
+        {
+            sendmessage("<span class='finish error'>Installation failure, check log.txt for more information.</span>");
+        }
     }
 }
     
@@ -217,6 +258,12 @@ function startroutine()
     $('#dckstart').click(function(){
          let data={};
          data[0]="";
+        console.log(fnames)
+        let existantfolder= fnames.split("|");
+        console.log(existantfolder)
+       let empty=true;
+        let existant=false;
+        let name="";
 
 
        $(':checkbox').each(function()
@@ -237,12 +284,26 @@ function startroutine()
                     query=id.split("sep")[0]+"sep";
                     foldername= $("#folder"+query).val();
                     dockername=$("#docker"+query).val();
+                    if(existantfolder.includes(foldername))
+                    {
+                        existant=true;
+                        name=foldername;
+                    }
+                    if(foldername=="" || dockername=="")
+                        empty=false;
                     data[0]=data[0]+stringpath+"|"+foldername+"|"+dockername+"QWE";
                 } 
                 else if (field ==1)
                 {
                     query=id.split("sep")[0]+"sep";
                     foldername= $("#folder"+query).val();
+                     if(existantfolder.includes(foldername))
+                    {
+                        existant=true;
+                        name=foldername;
+                    }
+                    if(foldername=="")
+                        empty=false;
                     data[1]=stringpath+"|"+foldername;
                 }
                 else if (field ==2)
@@ -250,6 +311,8 @@ function startroutine()
                     query=id.split("sep")[0]+"sep";
                     dockername=$("#docker"+query).val();
                     tmpdockername=$("#tmpdocker"+query).val();
+                    if(dockername=="" || tmpdockername=="")
+                        empty=false;
                     data[2]=stringpath+"|"+dockername+"|"+tmpdockername;
                 }
                 else if (field ==3)
@@ -261,8 +324,19 @@ function startroutine()
         
     const scrollHeight = document.body.scrollHeight;
     window.scrollTo(0, scrollHeight);
-
-    createroutine(data);
+    
+    if(empty==false)
+    {
+        sendmessage("<span class='error'>Docker installation is NOT started. You need to fill all the fields of the selected sections.</span>");
+        empty=true;
+    }
+     else if(existant==true)
+           {
+        sendmessage("<span class='error'>Docker installation is NOT started. Foldername '"+name+"' already exist.</span>");
+        existant=false;
+    }  
+        else
+        createroutine(data);
 
      });   
 });

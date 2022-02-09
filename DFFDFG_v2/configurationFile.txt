@@ -1,1 +1,1 @@
-/home/lucastormreig/jupyterFolder
+/home/luca/dockerFileGen_GUI/dockerFileGeneratorGUI/DFFDFG_v2
