@@ -10,8 +10,8 @@ RUN echo \
 RUN apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io
 RUN newgrp docker
 COPY ripuliscimi.sh /home/ripuliscimi.sh
-ENV SHELL=/bin/bash
 EXPOSE 3000
+ENV SHELL=/bin/bash
 RUN cd /home && git clone https://github.com/alessandriLuca/dockerFileGenerator
 COPY nodejs /nodejs/
 CMD ["node","/nodejs/gui.js"]

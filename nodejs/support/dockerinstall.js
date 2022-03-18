@@ -293,13 +293,13 @@ function startroutine()
     {
         sendmessage("<span class='error'>Docker installation is NOT started. You need to fill all the fields of the selected sections.</span>");
         empty=false;
-        queue="";
+        queue=[];
     }
      else if(existant==true)
            {
         sendmessage("<span class='error'>Docker installation is NOT started. Foldername '"+name+"' already exist.</span>");
         existant=false;
-               queue="";
+               queue=[];
     }  
         else
         {

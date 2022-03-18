@@ -26,6 +26,39 @@ function writeonlogtxt(text)
 });
 
 }
+
+function chmod()
+{
+    let spawn = require('child_process');
+   let child = spawn.spawnSync("chmod",["-R","777","/sharedFolder"] );
+    if(child["error"]!=null)
+    {
+        out+=child["error"];
+        console.log(child["error"]);
+    }
+    else
+    {
+    stdout=child["stdout"].toString();
+    stderr=child["stderr"].toString();
+    }
+    if (stdout!="")
+    {
+        console.log(stdout);
+        out+=(stdout);
+    }
+    if (stderr!="")
+    {
+        console.log(stderr);
+        out+=(stderr);
+    }
+    if (child["status"]!=null)
+        {out+="Process exit with code "+child["status"].toString();
+        console.log("Process exit with code "+child["status"].toString());
+        }
+    else {
+        out+="No exit coded was given";
+    }
+}
 function runexec(command,parameters,ecwd)
 {    
    let child = spawn(command, parameters,{cwd:ecwd});
@@ -45,7 +78,7 @@ function runexec(command,parameters,ecwd)
            }
             if(elem.match(runregex) || elem.match(ubunturegex))
                {
-                   out+="<br>"+elem
+                   out+="<br>"+elem;
 
                }
             }
@@ -66,7 +99,7 @@ child.stderr.on('data', (data) => {
               }
 
             if(elem.match(runregex) || elem.match(ubunturegex))
-               {out+="<br>"+elem
+               {out+="<br>"+elem;
                   
                }
             }
@@ -74,6 +107,7 @@ child.stderr.on('data', (data) => {
 });
 
 child.on('close', (code) => {
+        chmod();
             finish=true;
 
 console.log('child process exited with code '+code);
