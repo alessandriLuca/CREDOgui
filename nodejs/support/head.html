@@ -6,6 +6,25 @@
 <style type=text/css>
     
     
+    .link a{
+    color:white;
+    }
+    
+    .links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+    
+    .widget {
+   gap: 10px;
+    display: flex;
+    align-items: center;
+            width: 40%;
+    justify-content: center;
+        flex-wrap: wrap;
+}
+    
 .checkboxinput {
     margin: 0 5px 0 0;
     height: auto;
@@ -54,8 +73,10 @@
     }
     
     .footitle{
-    font-size:2em;
-    font-weight:bold;
+            font-size: 2.2em;
+    text-align: center;
+    font-weight: bold;
+    width: 20%;
     }
         body
         {
@@ -309,9 +330,10 @@ width: 100%;
     padding: 10px;
     }
     .widgets {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
+ display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
     }
 </style>
 </head>
