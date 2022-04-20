@@ -132,7 +132,7 @@ $(document).ready(function(){
    
 function tutorialshow()
     {
-      $('body').append('<span class="sticky"><button type="button" id="videoclose">X</button><iframe width="560" height="315" src="http://www.youtube.com/embed/8uos8Fxyjbc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></sticky>');
+      $('body').append('<span class="sticky"><button type="button" id="videoclose">X</button><iframe width="560" height="315" src="http://www.youtube.com/embed/hrBLrUr5B4Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></sticky>');
     
     }   
 function closetutorial()
