@@ -33,6 +33,7 @@ The output console provides the state of the dockerFile creation.
 
 # Post dockerFile creation
 The folder containing the Python and/or the R packages can be build with the command *docker build . -t [NAMEOFTHEDOCKER]*
+
 **If Jupter, RStudio or visualStudio are present** the docker folder will have the extension referring to the installed tool, e.g. _jupyter_lab.
 In the above mentioned folder, there is the script.sh (Linux/MAC OSX) or script.cmd (Windows), execute it and browse http://localhost:8888/
 Please note that the **/sharedFolder** is the mount in the docker containier of the folder where the scripts.sh is located.
