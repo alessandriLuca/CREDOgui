@@ -45,7 +45,7 @@ function checkboxcheck()
               levelnumber[field]=levelnumber[field]+1;
             else
                 levelnumber[field]=1;
-            if (field==0)
+            if (field==0 || field==4)
             {
             //Reconstruct the correct path (ADD THE .) !!!!!!!!!!! CONSIDER MAKE IT A FUNCitoNS
                 confpath=this.id.split("sep");

@@ -200,7 +200,7 @@ function startroutine()
     
 
     $('#dckstart').click(function(){
-         let data="";
+         let data="";//
         let existantfolder= fnames.split("|");
         let existant=false;
         let empty=false;
@@ -233,6 +233,11 @@ function startroutine()
                 if (field==2)
                 {
                     oldcat=this.value;
+                }
+                   if (field==4)
+                {
+                    //oldcat=this.value;
+                    data=data+sharedpath+tosave+"_"+oldcat+"_wDocker"+"£";
                 }
                 inputlist.forEach(elements=> {       
                        if (elements.includes(":"))

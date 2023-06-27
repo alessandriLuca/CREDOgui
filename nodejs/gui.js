@@ -2,7 +2,7 @@ const { spawn } = require('child_process')
 var finish = false;
 var working= true;
 var out="";
-var booleanlog=false;
+var booleanlog=false;//
 var logpath;
 
 function writeonlogtxt(text)
