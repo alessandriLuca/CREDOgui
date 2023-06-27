@@ -1,4 +1,4 @@
-#docker build . -t  repbioinfo/dockerfilegeneratorv20
+#docker build . -t  repbioinfo/dockerfilegeneratorv21
 if test -f "./configurationFile.txt"; then
     echo "$FILE exists."
 else
