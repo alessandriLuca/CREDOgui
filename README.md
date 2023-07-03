@@ -42,12 +42,12 @@ These are the parameters :
 - Result folder name.   
 - Absolute path of the folder in which all the results will be stored.    
 - Absolute path to the configurationFile.txt.  ConfigurationFile.txt must contain the absolute path to the host folder (third parameter). This parameter is optional and needed only if you are running dockerFileGenerator in a docker container.  Do not pass a fourth input argument if you are running dockerFileGenerator on a local machine.
-####If users wish to create a Docker image that embeds both Python and R, they need to select the 1_ layer and provide a folder name for the merged Docker image.
-####To include a GUI accessible by web browser, like Jupyter Notebook or Jupyter Lab in the new Docker image, the 2_ layer is required. In this layer, users must specify the name of the Docker image to be built (rStudio and visual studio are also provided).
-####The 3_ layer offers the option to run Docker or Singularity containers within a Docker image.
+#### If users wish to create a Docker image that embeds both Python and R, they need to select the 1_ layer and provide a folder name for the merged Docker image.
+#### To include a GUI accessible by web browser, like Jupyter Notebook or Jupyter Lab in the new Docker image, the 2_ layer is required. In this layer, users must specify the name of the Docker image to be built (rStudio and visual studio are also provided).
+#### The 3_ layer offers the option to run Docker or Singularity containers within a Docker image.
 To initiate the Docker building process, users can press the Start Docker Generation button. This action will create the Dockerfile, and in the Docker folder, all the required libraries and dependencies necessary to build the Docker image will be stored.
 This system aims to provide users with a convenient way to generate Docker images tailored to their specific needs, ensuring the inclusion of the desired libraries and tools while maintaining reproducibility and ease of use.
-####The Layer 4 allows you to install additional programs using the apt package manager during the Docker file generation process. This feature enables you to incorporate specific software into your Docker environment.
+#### The Layer 4 allows you to install additional programs using the apt package manager during the Docker file generation process. This feature enables you to incorporate specific software into your Docker environment.
 To use layer 4, you need to specify the desired apt package names in the configuration file and ensure that the apt package manager is properly configured in the Dockerfile. During the Docker file generation, the specified apt packages will be downloaded and installed within the Docker image.
 Utilizing layer 4 enables further customization of your Docker environment by including specific programs you require for your analysis or project.
 Make sure to carefully follow the instructions and accurately specify the names of the necessary apt packages in the configuration file. This way, during the Docker file generation, the desired programs will be correctly installed in the Docker image.
