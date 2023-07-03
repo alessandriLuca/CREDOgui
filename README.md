@@ -21,13 +21,36 @@ Ones the script seems to hang, open a web browser and browse http://localhost:30
 At this point the system is ready to build a personalised dockerFile.
 
 ### 0, 1, 2, 3 and 4 Layers
-The O_ layer in our system allows users to build a Docker image that embeds a specific version of Python or R. Users need to provide a folder name where all the required libraries will be stored.
+####The O_ layer in our system allows users to build a Docker image that embeds a specific version of Python or R. Users need to provide a folder name where all the required libraries will be stored.
 By clicking on the Config button, users can edit the configuration file used to build the Dockerfile. This configuration file should contain the necessary commands for loading the user-selected libraries related to Python or R.
-If users wish to create a Docker image that embeds both Python and R, they need to select the 1_ layer and provide a folder name for the merged Docker image.
-To include a GUI accessible by web browser, like Jupyter Notebook or Jupyter Lab in the new Docker image, the 2_ layer is required. In this layer, users must specify the name of the Docker image to be built (rStudio and visual studio are also provided).
-The 3_ layer offers the option to run Docker or Singularity containers within a Docker image.
+### Python commands to be used in config file:   
+download libraryName : this is the classic pip installation. Example is **download numpy**  
+downloadgit : download and install library using git. Example is **downloadgit https://github.com/httpie/httpie**   
+downloadConda (only for python >= 3.0.0 ): download conda environment and install it. Example is **downloadConda biopython**. Conda Environment will be stored in /snowflakes/condaName folder of the docker container and to activate it is enough to run the following code
+*source /snowflakes/condapackageName/bin/activate*  
+downloadbioconda (only for python >= 3.0.0 ): download conda environment and install it. Example is **downloadbioconda mageck**. Bioconda Environment will be stored in /snowflakes/biocondaName folder of the docker container and to activate it is enough to run the following coder
+*source /snowflakes/biocondapackageName/bin/activate*   
+
+##### R commands to be used in config file:   
+bioconductor : install libraries that require bioconductor. Example is **bioconductor("GenomicRanges")**   
+cran : install classic libraries from cran repositories. Example is **cran("Rtsne")**   
+github : install libraries from github. Example is **github("kendomaniac/rCASC")**   
+After this file is completed and saved the runMe.sh file can be run. 
+In each layer there is an example.sh file that shows how to run it.    
+These are the parameters :    
+- Temporary docker name. This name will be used for the dummy docker container. Be sure this name is not already taken from an important container or it will overwrite the existing one.   
+- Result folder name.   
+- Absolute path of the folder in which all the results will be stored.    
+- Absolute path to the configurationFile.txt.  ConfigurationFile.txt must contain the absolute path to the host folder (third parameter). This parameter is optional and needed only if you are running dockerFileGenerator in a docker container.  Do not pass a fourth input argument if you are running dockerFileGenerator on a local machine.
+####If users wish to create a Docker image that embeds both Python and R, they need to select the 1_ layer and provide a folder name for the merged Docker image.
+####To include a GUI accessible by web browser, like Jupyter Notebook or Jupyter Lab in the new Docker image, the 2_ layer is required. In this layer, users must specify the name of the Docker image to be built (rStudio and visual studio are also provided).
+####The 3_ layer offers the option to run Docker or Singularity containers within a Docker image.
 To initiate the Docker building process, users can press the Start Docker Generation button. This action will create the Dockerfile, and in the Docker folder, all the required libraries and dependencies necessary to build the Docker image will be stored.
 This system aims to provide users with a convenient way to generate Docker images tailored to their specific needs, ensuring the inclusion of the desired libraries and tools while maintaining reproducibility and ease of use.
+####The Layer 4 allows you to install additional programs using the apt package manager during the Docker file generation process. This feature enables you to incorporate specific software into your Docker environment.
+To use layer 4, you need to specify the desired apt package names in the configuration file and ensure that the apt package manager is properly configured in the Dockerfile. During the Docker file generation, the specified apt packages will be downloaded and installed within the Docker image.
+Utilizing layer 4 enables further customization of your Docker environment by including specific programs you require for your analysis or project.
+Make sure to carefully follow the instructions and accurately specify the names of the necessary apt packages in the configuration file. This way, during the Docker file generation, the desired programs will be correctly installed in the Docker image.
 ### Output console
 The output console provides the state of the dockerFile creation.
 The output console will not show all the standard output but just a summa. For the details a log file is generated in the main folder of CREDOgui.
