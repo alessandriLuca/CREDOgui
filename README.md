@@ -1,5 +1,5 @@
 # CREDOgui
-# THIS VERSION OF CREDO IS A BETA. WE ARE REWRITING CREDO at the following link https://github.com/CREDOProject/core
+# THIS VERSION OF CREDO IS A BETA. WE ARE REWRITING CREDO at the following link https://github.com/CREDOProject/
 
 This tool is designed to to extend the level of reproducibility, modulability and portability of conventional dockerFiles.
 This tool provides the possibility to build complex dockerFiles using a graphical interface. Furthermore, the tool stores locally R and Python libraries. The docker folders are compatible to be uploaded on github, since they are splitted to keep each file below 24 Mb.
